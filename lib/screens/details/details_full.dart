@@ -1,56 +1,68 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:noteit/constants/constants.dart';
+import 'package:noteit/controller/controller.dart';
 class FullDetails extends StatelessWidget {
   const FullDetails({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final noteItController = Get.find<NoteItController>();
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              Color.fromARGB(170, 255, 91, 107),
-              Color.fromARGB(255, 251, 91, 107)
-            ])),
-        child: Container(
-          margin:
-              const EdgeInsets.only(top: 120, left: 30, right: 30, bottom: 130),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
-          // alignment: Alignment.center,
+        height: height,
+        width: width,
+        decoration: detailsPageDecoration,
+        child: Center(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             padding: const EdgeInsets.all(16.0),
-            child: ListView(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            height:height * 0.6,
+            width: width * 0.7,
+            alignment: Alignment.center,
+            child: Column(
               children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                const ListTile(
-                  leading: Icon(Icons.person),
+                ListTile(
+                  leading: const Icon(Icons.person),
                   title: Text(
-                    ' \$name',
+                    noteItController.selectedStudent?.studentName??'',
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
-                const ListTile(
-                  leading: Icon(Icons.accessibility),
+                detailsSpace,
+                ListTile(
+                  leading: const Icon(Icons.accessibility),
                   title: Text(
-                    ' \$age',
+                    noteItController.selectedStudent?.age??'',
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
+                detailsSpace,
+                ListTile(
+                  leading: const Icon(Icons.margin),
+                  title: Text(
+                    noteItController.selectedStudent?.rollNumber??'',
+                  ),
+                ),
+                detailsSpace,
+                ListTile(
+                  leading: const Icon(Icons.phone),
+                  title: Text(
+                    noteItController.selectedStudent?.mobileNumber??'',
+                  ),
                 ),
                 // Text(''),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/editDetails');
+                    noteItController.editStudentDetails();
+                    noteItController.isShortEnabled = true;
+                    if(ModalRoute.of(context)?.settings.name == '/fullDetails'){
+                      Get.offNamed('/editStudent');
+                    }
                   },
                   child: const Icon(Icons.edit),
                 ),

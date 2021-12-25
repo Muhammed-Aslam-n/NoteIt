@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:noteit/constants/constants.dart';
+import 'package:noteit/controller/controller.dart';
 import 'package:noteit/widgets/widgets.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 class SearchStudent extends StatelessWidget {
   const SearchStudent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var keyword = '';
+    final noteItController = Get.find<NoteItController>();
 
     return Scaffold(
       appBar: const CommonAppBar(),
@@ -21,13 +26,45 @@ class SearchStudent extends StatelessWidget {
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: 'Enter Name'),
                   onChanged: (value) {
-                    keyword = value;
+                    noteItController.searchStudent(value);
                   },
                 ),
               ),
-              const Expanded(
-                child: Center(child: Text("Hi"),)
-              )
+              Expanded(
+                child: ValueListenableBuilder(
+                  valueListenable: noteItController.studentBox!.listenable(),
+                  builder: (context, noteItC, _) {
+                    if (noteItController.studentBox!.isEmpty) {
+                      return Column(
+                        children: const [
+                          Text("No Students so far..."),
+                        ],
+                      );
+                    } else {
+                      return ListView.separated(
+                        itemCount: noteItController.searchResult!.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: ListTile(
+                              tileColor: Colors.grey.shade400,
+                              title: Text(
+                                noteItController
+                                        .searchResult![index].studentName ??
+                                    'void',
+                              ),
+                              subtitle: Text(noteItController
+                                      .searchResult![index].rollNumber ??
+                                  'void'),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) => divider(),
+                      );
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),

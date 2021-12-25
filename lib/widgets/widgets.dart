@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:noteit/constants/constants.dart';
+import 'package:noteit/controller/controller.dart';
 
-class CommonAppBar extends StatelessWidget implements PreferredSizeWidget{
+class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppBar({Key? key}) : super(key: key);
+
   @override
   Size get preferredSize => const Size.fromHeight(80);
+
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
@@ -37,10 +40,6 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget{
   }
 }
 
-
-
-
-
 Widget contentBox({heading, desc, color}) {
   return Container(
     decoration: BoxDecoration(
@@ -71,14 +70,12 @@ Widget contentBox({heading, desc, color}) {
   );
 }
 
-
-
-
 class CommonDrawer extends StatelessWidget {
   const CommonDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final noteItController = Get.find<NoteItController>();
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -90,7 +87,8 @@ class CommonDrawer extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.blue,
                   image: DecorationImage(
-                      image: AssetImage("assets/images/images_carousal/School4.jfif"),
+                      image: AssetImage(
+                          "assets/images/images_carousal/School4.jfif"),
                       fit: BoxFit.cover),
                 ),
                 child: Text(''),
@@ -136,7 +134,12 @@ class CommonDrawer extends StatelessWidget {
             ),
             onTap: () {
               Get.back();
-              Get.toNamed("/shortDetails",);
+              Get.back();
+              if (ModalRoute.of(context)?.settings.name == '/') {
+                Get.toNamed('/shortDetails');
+              } else {
+                Get.offNamed('/shortDetails');
+              }
             },
           ),
           ListTile(
@@ -151,7 +154,11 @@ class CommonDrawer extends StatelessWidget {
             ),
             onTap: () {
               Get.back();
-              Get.toNamed('/searchStudent');
+              if (ModalRoute.of(context)?.settings.name == '/') {
+                Get.toNamed('/searchStudent');
+              } else {
+                Get.offNamed('/searchStudent');
+              }
             },
           ),
           ListTile(
@@ -165,12 +172,30 @@ class CommonDrawer extends StatelessWidget {
               ],
             ),
             onTap: () {
+              noteItController.selectedStudentId = -1;
+              debugPrint("Route is ${ModalRoute.of(context)?.settings.name}");
               Get.back();
-              Get.toNamed('/editStudent');
+              if (ModalRoute.of(context)?.settings.name == '/') {
+                noteItController.isShortEnabled = false;
+                Get.toNamed('/editStudent');
+              } else {
+                Get.offNamed('/editStudent');
+              }
             },
           ),
         ],
       ),
     );
   }
+}
+
+commonText({text, color, weight, size}) {
+  return Text(
+    text ?? '',
+    style: TextStyle(
+      color: color ?? Colors.black,
+      fontSize: size ?? 15,
+      fontWeight: weight ?? FontWeight.w600,
+    ),
+  );
 }

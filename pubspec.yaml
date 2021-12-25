@@ -43,6 +43,7 @@ dependencies:
   carousel_slider: any
   wc_form_validators: any
   double_back_to_close_app: any
+  flutter_slidable: any
 
 
 dev_dependencies:

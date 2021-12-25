@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:noteit/screens/search/search_student.dart';
 import 'package:path_provider/path_provider.dart';
 import 'constants/constants.dart';
+import 'controller/controller.dart';
 import 'database/db_noteit.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -15,10 +16,9 @@ Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   final directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
-  debugPrint(directory.path);
   Hive.registerAdapter(NoteItAdapter());
   await Hive.openBox<NoteIt>(noteItBoxName);
-
+  final noteItController = Get.put(NoteItController());
   runApp(const MyApp());
 }
 
