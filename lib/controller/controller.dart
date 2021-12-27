@@ -41,9 +41,10 @@ class NoteItController extends GetxController{
     studentRoll.clear();
     studentMobile.clear();
   }
-  searchStudent(keyword){
+  ValueNotifier<List<NoteIt>?> searchResultList = ValueNotifier(<NoteIt>[]);
+  searchStudent({keyword = 'notSearched'}){
     debugPrint("Search keyWord $keyword");
-    keyword != null && keyword != ''?searchResult = studentBox?.values
+    keyword != null && keyword != 'notSearched'?searchResultList.value = studentBox?.values
         .where((item) => item.studentName!.toLowerCase().contains(keyword??''))
         .toList():[];
   }

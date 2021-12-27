@@ -26,23 +26,26 @@ class SearchStudent extends StatelessWidget {
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: 'Enter Name'),
                   onChanged: (value) {
-                    noteItController.searchStudent(value);
+                    noteItController.searchStudent(keyword: value);
                   },
                 ),
               ),
               Expanded(
                 child: ValueListenableBuilder(
-                  valueListenable: noteItController.studentBox!.listenable(),
+                  valueListenable: noteItController.searchResultList,
                   builder: (context, noteItC, _) {
                     if (noteItController.studentBox!.isEmpty) {
-                      return Column(
-                        children: const [
-                          Text("No Students so far..."),
-                        ],
+                      return const Center(
+                        child: Text("No Students so far...")
                       );
                     } else {
+                      if(noteItController.searchResultList.value!.isEmpty){
+                        return const Center(
+                            child: Text("No Students found")
+                        );
+                      }
                       return ListView.separated(
-                        itemCount: noteItController.searchResult!.length,
+                        itemCount: noteItController.searchResultList.value!.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -50,11 +53,11 @@ class SearchStudent extends StatelessWidget {
                               tileColor: Colors.grey.shade400,
                               title: Text(
                                 noteItController
-                                        .searchResult![index].studentName ??
+                                        .searchResultList.value![index].studentName ??
                                     'void',
                               ),
-                              subtitle: Text(noteItController
-                                      .searchResult![index].rollNumber ??
+                              subtitle: Text(noteItController.
+                                  searchResultList.value![index].rollNumber ??
                                   'void'),
                             ),
                           );
